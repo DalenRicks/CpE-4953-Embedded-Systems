@@ -1,0 +1,3 @@
+[submodule "SSD1306/ssd1306_linux"]
+	path = SSD1306/ssd1306_linux
+	url = https://github.com/armlabs/ssd1306_linux
