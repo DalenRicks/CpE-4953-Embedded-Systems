@@ -1,0 +1,5 @@
+/app/build/CMakeFiles/example.dir
+/app/build/CMakeFiles/libintarithmetic.dir
+/app/build/CMakeFiles/libdoublearithmetic.dir
+/app/build/CMakeFiles/edit_cache.dir
+/app/build/CMakeFiles/rebuild_cache.dir

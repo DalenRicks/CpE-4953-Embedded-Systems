@@ -1,0 +1,2 @@
+//duo-sdk/riscv64-linux-musl-x86_64/bin/riscv64-unknown-linux-musl-ar qc liblibdoublearithmetic.a CMakeFiles/libdoublearithmetic.dir/add_double.cpp.o CMakeFiles/libdoublearithmetic.dir/subtract_double.cpp.o CMakeFiles/libdoublearithmetic.dir/multiply_double.cpp.o CMakeFiles/libdoublearithmetic.dir/divide_double.cpp.o
+//duo-sdk/riscv64-linux-musl-x86_64/bin/riscv64-unknown-linux-musl-ranlib liblibdoublearithmetic.a
