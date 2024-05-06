@@ -33,7 +33,7 @@ uint8_t ssd1306_system_init(uint8_t i2c_dev)
     ssd1306_oled_clear_screen();
 
     /*Setting OLED Orientation*/
-    ssd1306_oled_set_rotate(180);
+    ssd1306_oled_set_rotate(0);
 
     /*Setting Display inversion*/
     ssd1306_oled_display_flip(0);
