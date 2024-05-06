@@ -4,6 +4,10 @@
 #include <cjson/cJSON.h>
 #include <string.h>
 
+/*Definitions for connecting to the mqtt broker*/
+#define GROUP_TOPIC                 "cpe4953/spring2024/group1"
+#define GROUP_IP                    "104.236.198.67"
+
 void publish_message(struct mosquitto *mosq, const char *topic, const char *message)
 {
     int ret = mosquitto_publish(mosq, NULL, topic, strlen(message), message, 0, false);
@@ -16,7 +20,7 @@ void publish_message(struct mosquitto *mosq, const char *topic, const char *mess
 int main(int argc, char *argv[])
 {
     struct mosquitto *mosq;
-    char *topic = "cpe4953/spring2024/group1";
+    char *topic = GROUP_TOPIC;
     const char *json_string;
 
     // Initialize the Mosquitto library
@@ -31,7 +35,7 @@ int main(int argc, char *argv[])
     }
 
     // Connect to an MQTT broker
-    if (mosquitto_connect(mosq, "104.236.198.67", 1883, 60) != MOSQ_ERR_SUCCESS)
+    if (mosquitto_connect(mosq, GROUP_IP, 1883, 60) != MOSQ_ERR_SUCCESS)
     {
         fprintf(stderr, "Could not connect to broker\n");
         exit(-1);

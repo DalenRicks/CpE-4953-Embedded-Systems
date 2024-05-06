@@ -18,10 +18,14 @@
  * single character is 5 characters long
  */
 
-#define MORSE_ENABLE                true   //Deactivates blinking the LED if you dont have all day
+#define MORSE_ENABLE                false   //Deactivates blinking the LED if you dont have all day
                                             //You can change the blink delay in morse.c
 
 #define START_UP_MESSAGE_ENABLE     false    //Activate if you want to test the OLED display
+
+/*Definitions for connecting to the mqtt broker*/
+#define GROUP_TOPIC                 "cpe4953/spring2024/group1"
+#define GROUP_IP                    "104.236.198.67"
 
 void message_callback(struct mosquitto *mosq, void *userdata, const struct mosquitto_message *message)
 {
@@ -393,14 +397,14 @@ int main(int argc, char *argv[])
     mosquitto_message_callback_set(mosq, message_callback);
 
     // Connect to an MQTT broker
-    if (mosquitto_connect(mosq, "104.236.198.67", 1883, 60) != MOSQ_ERR_SUCCESS)
+    if (mosquitto_connect(mosq, GROUP_IP, 1883, 60) != MOSQ_ERR_SUCCESS)
     {
         fprintf(stderr, "Could not connect to broker\n");
         exit(-1);
     }
 
     // Subscribe to the topic
-    mosquitto_subscribe(mosq, NULL, "cpe4953/spring2024/group1", 0);
+    mosquitto_subscribe(mosq, NULL, GROUP_TOPIC, 0);
 
     // Start the loop
     mosquitto_loop_start(mosq);

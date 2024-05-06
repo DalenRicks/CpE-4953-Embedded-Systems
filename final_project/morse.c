@@ -1,11 +1,18 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 #include "morse.h"
 #include "blink.h"
 
-#define MORSE_BLINK_DELAY       100000   //Time in microseconds. Cannot be less than 1
+#define MORSE_BLINK_DELAY       100000  //Time in microseconds. Cannot be less than 1
+#define MAX_SPACE_DETECT        5       //Maximum amount of spaces before triggering the graphics detect function
+
+#define LETTER_SPACE            ' '
+#define WORD_SPACE              '/'
+#define DOT                     '.'
+#define DASH                    '-'
 
 const char *char_to_morse(char c)
 {
@@ -104,7 +111,7 @@ void morse_blink_led(const char *morseCode)
     for (int i = 0; i < len; i++){
         switch(morseCode[i]){
             //Dots will be 1 unit
-            case '.':
+            case DOT:
                 turn_on_led();
                 usleep(duration);
                 printf("Dot (1 Unit)\n");
@@ -118,7 +125,7 @@ void morse_blink_led(const char *morseCode)
                 break;
 
             //Dashes will be 3 units
-            case '-':
+            case DASH:
                 turn_on_led();
                 usleep(3 * duration);
                 printf("Dash (3 Units)\n");
@@ -132,13 +139,13 @@ void morse_blink_led(const char *morseCode)
                 break;
 
             //Space between words will be 7 units
-            case '/':
+            case WORD_SPACE:
                 usleep(7 * duration);
                 printf("Word Space (7 Units)\n"); //Word space
                 break;
 
             //Space between letters will be 3 units
-            case ' ':
+            case LETTER_SPACE:
                 usleep(3 * duration);
                 printf("Letter Space (3 Units)\n"); // Letter Space
                 break;
