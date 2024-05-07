@@ -14,7 +14,7 @@
 #define MORSE_ENABLE                false   //Deactivates blinking the LED if you dont have all day
                                             //You can change the blink delay in morse.c
 
-#define START_UP_MESSAGE_ENABLE     false   //Activate if you want to test the OLED display
+#define START_UP_MESSAGE_ENABLE     true   //Activate if you want to test the OLED display
 
 /*Temperature and Pressure settings*/
 #define AMERICANIZE_IT              false    //Enables measurements in freedom units
@@ -452,7 +452,7 @@ void system_init(){
     if(START_UP_MESSAGE_ENABLE){
         printf("Testing BMP280 Sensor and OLED Display printing.\n");
         struct bmp280_i2c result = read_temp_pressure();
-        char buffer[60];
+        char buffer[120];
 
         //Printing current temperature and pressure to the terminal
         printf("Current Temperature: %.2f C\n", result.temperature_C);
@@ -462,14 +462,7 @@ void system_init(){
         printf("Current Pressure: %.3f psi\n", result.pressure_psi);
 
         //Format the data into a string and save it to a buffer
-        switch(AMERICANIZE_IT){
-            case 0:
-                sprintf(buffer, "Temperature: %.2f C \\nPressure:: %.3f kPa", result.temperature_C, result.pressure_kPa);
-                break;                                                                                          
-            case 1:
-                sprintf(buffer, "Temperature: %.2f F \\nPressure:: %.3f atm", result.temperature_F, result.pressure_atm);
-                break; 
-        }
+        sprintf(buffer, "Temperature: %.2f C \\nTemperature: %.2f F \\nPressure: %.3f kPa\\nPressure: %.3f atm\\nPressure: %.3f psi\\n", result.temperature_C, result.temperature_F,result.pressure_kPa, result.pressure_atm, result.pressure_psi);
         
         //Clear the screen before printing
         ssd1306_oled_clear_screen();
