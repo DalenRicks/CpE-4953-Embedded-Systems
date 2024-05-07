@@ -44,6 +44,10 @@ This will enable the function that blinks the on-board led on the MilkV Duo. Sin
 
 This is a boolean macro that will test the OLED and BMP280 i2c communication by collecting information from the sensor and printing it to the display on start up. This feature is promarially for debugging, so once set up has comcluded it can be disabled. The default falue is ***false***.
 
+### `AMERICANIZE_IT`
+
+This is a boolean macro that will display measurements in US Customary Units if **true** or SI Units if **false**. The default value is ***false***.
+
 ### `FONT_SIZE`
 
 Font size will change the size of the letters printed on the OLED display. The default value is ***0***.
