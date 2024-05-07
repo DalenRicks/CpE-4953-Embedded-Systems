@@ -14,7 +14,10 @@
 #define MORSE_ENABLE                false   //Deactivates blinking the LED if you dont have all day
                                             //You can change the blink delay in morse.c
 
-#define START_UP_MESSAGE_ENABLE     false    //Activate if you want to test the OLED display
+#define START_UP_MESSAGE_ENABLE     false   //Activate if you want to test the OLED display
+
+/*Temperature and Pressure settings*/
+#define AMERICANIZE_IT              false    //Enables measurements in freedom units
 
 /*System settings*/
 #define FONT_SIZE                   0
@@ -105,10 +108,18 @@ void message_callback(struct mosquitto *mosq, void *userdata, const struct mosqu
                     char buffer[30];
 
                     //Printing current temperature to the terminal
-                    printf("Current Temperature: %.2f C\n", result.temperature);
+                    printf("Current Temperature: %.2f C\n", result.temperature_C);
 
                     //Format the data into a string and save it to a buffer
-                    sprintf(buffer, "Temperature: %.2f C", result.temperature);
+                    switch(AMERICANIZE_IT){
+                        case 0:
+                            sprintf(buffer, "Temperature: %.2f C", result.temperature_C);
+                            break;                                                                                          
+                        case 1:
+                            sprintf(buffer, "Temperature: %.2f F", result.temperature_F);
+                            break; 
+                    }
+                    
 
                     //Clear the screen before printing
                     ssd1306_oled_clear_screen();
@@ -125,8 +136,15 @@ void message_callback(struct mosquitto *mosq, void *userdata, const struct mosqu
                     char morseOutput[20 * 5];   //Read MAX_MORSE_BUF_SIZE comment for 30 * 5 explanation
 
                     //Formatting shortened temperature message
-                    sprintf(bufT, "T: %.2f C", result.temperature);
-
+                    switch(AMERICANIZE_IT){
+                        case 0:
+                            sprintf(bufT, "T: %.2f C", result.temperature_C);
+                            break;                                                                                          
+                        case 1:
+                            sprintf(bufT, "T: %.2f F", result.temperature_F);
+                            break; 
+                    }
+                    
                     //Translate pressure to morse code
                     translate_to_morse(bufT, morseOutput);
 
@@ -151,10 +169,20 @@ void message_callback(struct mosquitto *mosq, void *userdata, const struct mosqu
                     char buffer[30];
                     
                     //Printing current pressure to the terminal
-                    printf("Current Pressure: %.3f kPa\n", result.pressure);
+                    printf("Current Pressure: %.3f kPa\n", result.pressure_kPa);
+                    printf("Current Pressure: %.3f atm\n", result.pressure_atm);
+                    printf("Current Pressure: %.3f psi\n", result.pressure_psi);
 
                     //Format the data into a string and save it to a buffer
-                    sprintf(buffer, "Pressure: %.3f kPa", result.pressure);
+                    switch(AMERICANIZE_IT){
+                        case 0:
+                            sprintf(buffer, "Pressure: %.3f kPa", result.pressure_kPa);
+                            break;                                                                                          
+                        case 1:
+                            sprintf(buffer, "Pressure: %.3f atm", result.pressure_atm);
+                            break; 
+                    }
+                    
 
                     //Clear the screen before printing
                     ssd1306_oled_clear_screen();
@@ -171,8 +199,15 @@ void message_callback(struct mosquitto *mosq, void *userdata, const struct mosqu
                     char morseOutput[20 * 5];   //Read MAX_MORSE_BUF_SIZE comment for 30 * 5 explanation
 
                     //Formatting shortened pressure message
-                    sprintf(bufP, "P: %.3f kPa", result.pressure);
-
+                    switch(AMERICANIZE_IT){
+                        case 0:
+                            sprintf(bufP, "P: %.3f kPa", result.pressure_kPa);
+                            break;                                                                                          
+                        case 1:
+                            sprintf(bufP, "P: %.3f atm", result.pressure_atm);
+                            break; 
+                    }
+                    
                     //Translate pressure to morse code
                     translate_to_morse(bufP, morseOutput);
 
@@ -197,11 +232,21 @@ void message_callback(struct mosquitto *mosq, void *userdata, const struct mosqu
                     char buffer[50];
 
                     //Printing current temperature and pressure to the terminal
-                    printf("Current Temperature: %.2f C\n", result.temperature);
-                    printf("Current Pressure: %.3f kPa\n", result.pressure);
+                    printf("Current Temperature: %.2f C\n", result.temperature_C);
+                    printf("Current Temperature: %.2f F\n", result.temperature_F);
+                    printf("Current Pressure: %.3f kPa\n", result.pressure_kPa);
+                    printf("Current Pressure: %.3f atm\n", result.pressure_atm);
+                    printf("Current Pressure: %.3f psi\n", result.pressure_psi);
 
                     //Format the data into a string and save it to a buffer
-                    sprintf(buffer, "Temperature: %.2f C \\nPressure:: %.3f kPa", result.temperature, result.pressure);
+                    switch(AMERICANIZE_IT){
+                        case 0:
+                            sprintf(buffer, "Temperature: %.2f C \\nPressure:: %.3f kPa", result.temperature_C, result.pressure_kPa);
+                            break;                                                                                          
+                        case 1:
+                            sprintf(buffer, "Temperature: %.2f F \\nPressure:: %.3f atm", result.temperature_F, result.pressure_atm);
+                            break; 
+                    }
                     
                     //Clear the screen before printing
                     ssd1306_oled_clear_screen();
@@ -219,8 +264,16 @@ void message_callback(struct mosquitto *mosq, void *userdata, const struct mosqu
                     char morseOutput[20 * 5];   //Read MAX_MORSE_BUF_SIZE comment for 30 * 5 explanation
 
                     //Formatting shortened temperature and pressure messages
-                    sprintf(bufT, "T: %.2f C", result.temperature);
-                    sprintf(bufP, "P: %.3f kPa", result.pressure);
+                    switch(AMERICANIZE_IT){
+                        case 0:
+                            sprintf(bufT, "T: %.2f C", result.temperature_C);
+                            sprintf(bufP, "P: %.3f kPa", result.pressure_kPa);
+                            break;                                                                                          
+                        case 1:
+                            sprintf(bufT, "T: %.2f F", result.temperature_F);
+                            sprintf(bufP, "P: %.3f atm", result.pressure_atm);
+                            break; 
+                    }
 
                     //Translate pressure to morse code
                     translate_to_morse(bufT, morseOutput);
@@ -402,11 +455,21 @@ void system_init(){
         char buffer[60];
 
         //Printing current temperature and pressure to the terminal
-        printf("Current Temperature: %.2f C\n", result.temperature);
-        printf("Current Pressure: %.3f kPa\n", result.pressure);
+        printf("Current Temperature: %.2f C\n", result.temperature_C);
+        printf("Current Temperature: %.2f F\n", result.temperature_F);
+        printf("Current Pressure: %.3f kPa\n", result.pressure_kPa);
+        printf("Current Pressure: %.3f atm\n", result.pressure_atm);
+        printf("Current Pressure: %.3f psi\n", result.pressure_psi);
 
         //Format the data into a string and save it to a buffer
-        sprintf(buffer, "Temperature: %.2f C \\nPressure: %.3f kPa", result.temperature, result.pressure);
+        switch(AMERICANIZE_IT){
+            case 0:
+                sprintf(buffer, "Temperature: %.2f C \\nPressure:: %.3f kPa", result.temperature_C, result.pressure_kPa);
+                break;                                                                                          
+            case 1:
+                sprintf(buffer, "Temperature: %.2f F \\nPressure:: %.3f atm", result.temperature_F, result.pressure_atm);
+                break; 
+        }
         
         //Clear the screen before printing
         ssd1306_oled_clear_screen();

@@ -150,8 +150,11 @@ struct bmp280_i2c read_temp_pressure(){
     struct bmp280_i2c data;
 
     bmp280_read_raw(fd_i2c, &raw_temperature, &raw_pressure);
-    data.temperature = (bmp280_convert_temp(raw_temperature, &params)) / 100;
-    data.pressure = (bmp280_convert_pressure(raw_pressure, raw_temperature, &params)) / 1000;
-    
+    data.temperature_C = ((bmp280_convert_temp(raw_temperature, &params)) / 100);
+    data.temperature_F = (data.temperature_C * 1.8) + 32;
+    data.pressure_kPa = (bmp280_convert_pressure(raw_pressure, raw_temperature, &params)) / 1000;
+    data.pressure_atm = data.pressure_kPa / 101.325;
+    data.pressure_psi = data.pressure_kPa / 6.895;
+
     return data;
 }
