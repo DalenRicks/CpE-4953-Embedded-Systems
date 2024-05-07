@@ -10,18 +10,21 @@
 #include "morse.h"
 #include "blink.h"
 
-#define FONT_SIZE                   0
-#define MAX_STRING_MSG_BUF_SIZE     250     //Cannot be less than 200
-#define MAX_INT_MSG_BUF_SIZE        20
-#define MAX_MORSE_BUF_SIZE          MAX_STRING_MSG_BUF_SIZE * 5 
-/**I multiplied it by 5 because the longest morse represenation for a 
- * single character is 5 characters long
- */
-
+/*Debugging and morse code settings*/
 #define MORSE_ENABLE                false   //Deactivates blinking the LED if you dont have all day
                                             //You can change the blink delay in morse.c
 
 #define START_UP_MESSAGE_ENABLE     false    //Activate if you want to test the OLED display
+
+/*System settings*/
+#define FONT_SIZE                   0
+#define MAX_STRING_MSG_BUF_SIZE     250     //Cannot be less than 200
+#define MAX_INT_MSG_BUF_SIZE        20
+#define MORSE_RATIO_THRESHOLD       2       //Threshold for detecting a graphic
+#define MAX_MORSE_BUF_SIZE          MAX_STRING_MSG_BUF_SIZE * 5 
+/**I multiplied it by 5 because the longest morse represenation for a 
+ * single character is 5 characters long
+ */
 
 /*Definitions for connecting to the mqtt broker*/
 #define GROUP_TOPIC                 "cpe4953/spring2024/group1"
@@ -40,6 +43,7 @@ void message_callback(struct mosquitto *mosq, void *userdata, const struct mosqu
             {
                 printf("Name: %s\n", name->valuestring);
 
+                //Variables for morse code translator
                 char morseOutput[MAX_STRING_MSG_BUF_SIZE];
                 
                 //Translate name to morse code
@@ -48,7 +52,14 @@ void message_callback(struct mosquitto *mosq, void *userdata, const struct mosqu
                 //Printing translated name to the terminal
                 printf("Morse encoding:\n%s\n", morseOutput);
 
-                if(MORSE_ENABLE){
+                //Calculating the ratio of output string vs input string
+                int iLen = strlen(name->valuestring);
+                int mLen = strlen(morseOutput);
+                int ratio =  mLen/iLen;
+                printf("Morse Ratio is: %d\n", ratio);
+
+
+                if(MORSE_ENABLE && (ratio > MORSE_RATIO_THRESHOLD)){
                     ///Passing the translated message to LED blinking function
                     morse_blink_led(morseOutput);
                 }
@@ -73,7 +84,13 @@ void message_callback(struct mosquitto *mosq, void *userdata, const struct mosqu
                 //Printing translated number to the terminal
                 printf("Morse encoding:\n%s\n", morseOutput);
 
-                if(MORSE_ENABLE){
+                //Calculating the ratio of output string vs input string
+                int iLen = strlen(inputNumber);
+                int mLen = strlen(morseOutput);
+                int ratio =  mLen/iLen;
+                printf("Morse Ratio is: %d\n", ratio);
+
+                if(MORSE_ENABLE && (ratio > MORSE_RATIO_THRESHOLD)){
                     //Passing the translated number to LED blinking function
                     morse_blink_led(morseOutput);
                 }
@@ -113,13 +130,16 @@ void message_callback(struct mosquitto *mosq, void *userdata, const struct mosqu
                     //Translate pressure to morse code
                     translate_to_morse(bufT, morseOutput);
 
-                    //Translate temperature to morse code
-                    translate_to_morse(bufT, morseOutput);
-
                     //Printing translated temperature to the terminal
                     printf("Temperature Morse encoding:\n%s\n", morseOutput);
+                    
+                    //Calculating the ratio of output string vs input string
+                    int iLen = strlen(bufT);
+                    int mLen = strlen(morseOutput);
+                    int ratio =  mLen/iLen;
+                    printf("Morse Ratio is: %d\n", ratio);
 
-                    if(MORSE_ENABLE){
+                    if(MORSE_ENABLE && (ratio > MORSE_RATIO_THRESHOLD)){
                         //Passing the translated temperature to LED blinking function
                         morse_blink_led(morseOutput);
                     }
@@ -158,8 +178,14 @@ void message_callback(struct mosquitto *mosq, void *userdata, const struct mosqu
 
                     //Printing translated pressure to the terminal
                     printf("Pressure morse encoding:\n%s\n", morseOutput);
+                    
+                    //Calculating the ratio of output string vs input string
+                    int iLen = strlen(bufP);
+                    int mLen = strlen(morseOutput);
+                    int ratio =  mLen/iLen;
+                    printf("Morse Ratio is: %d\n", ratio);
 
-                    if(MORSE_ENABLE){
+                    if(MORSE_ENABLE && (ratio > MORSE_RATIO_THRESHOLD)){
                         //Passing the translated pressure to LED blinking function
                         morse_blink_led(morseOutput);
                     }
@@ -201,17 +227,29 @@ void message_callback(struct mosquitto *mosq, void *userdata, const struct mosqu
 
                     //Printing translated temperature to the terminal
                     printf("Temperature morse encoding:\n%s\n", morseOutput);
+                    
+                    //Calculating the ratio of output string vs input string
+                    int iLen = strlen(bufT);
+                    int mLen = strlen(morseOutput);
+                    int ratio =  mLen/iLen;
+                    printf("Morse Ratio is: %d\n", ratio);
 
                     //Translate pressure to morse code
                     translate_to_morse(bufP, morseOutput);
 
                     //Printing translated pressure to the terminal
                     printf("Pressure morse encoding:\n%s\n", morseOutput);
+                    
+                    //Calculating the ratio of output string vs input string
+                    iLen = strlen(bufP);
+                    mLen = strlen(morseOutput);
+                    ratio =  mLen/iLen;
+                    printf("Morse Ratio is: %d\n", ratio);
 
                     /**Since I only use one buffer the temperature and pressure
                      * will need to be re-translated prior to blinking the LED
                     */
-                    if(MORSE_ENABLE){
+                    if(MORSE_ENABLE && (ratio > MORSE_RATIO_THRESHOLD)){
                         //Translate temperature to morse code
                         translate_to_morse(bufT, morseOutput);
 
@@ -272,8 +310,14 @@ void message_callback(struct mosquitto *mosq, void *userdata, const struct mosqu
 
                 //Printing translated string to the terminal
                 printf("String morse encoding:\n%s\n", morseOutput);
+                
+                //Calculating the ratio of output string vs input string
+                int iLen = strlen(buffer);
+                int mLen = strlen(morseOutput);
+                int ratio =  mLen/iLen;
+                printf("Morse Ratio is: %d\n", ratio);
 
-                if(MORSE_ENABLE){
+                if(MORSE_ENABLE && (ratio > MORSE_RATIO_THRESHOLD)){
                     //Passing the translated string to LED blinking function
                     morse_blink_led(morseOutput);
                 }
@@ -305,8 +349,14 @@ void message_callback(struct mosquitto *mosq, void *userdata, const struct mosqu
 
                 //Printing translated number to the terminal
                 printf("Number morse encoding:\n%s\n", morseOutput);
+                
+                //Calculating the ratio of output string vs input string
+                int iLen = strlen(buffer);
+                int mLen = strlen(morseOutput);
+                int ratio =  mLen/iLen;
+                printf("Morse Ratio is: %d\n", ratio);
 
-                if(MORSE_ENABLE){
+                if(MORSE_ENABLE && (ratio > MORSE_RATIO_THRESHOLD)){
                     //Passing the translated number to LED blinking function
                     morse_blink_led(morseOutput);
                 }
