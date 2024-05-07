@@ -36,6 +36,14 @@ scp build/publisher root@192.168.42.1:/root
 
 There are defined functions in `subscriber.c` that you can modify prior to deploying the code.
 
+### `MORSE_ENABLE`
+
+This will enable the function that blinks the on-board led on the MilkV Duo. Since the fastest the LED can blink is a 2 second period, so long messages can take a while to blink. You have the option to diable the blinking to save time. Regardless of the state of `MORSE_ENABLE` the translated morse messages will be printed to the terminal.
+
+### `START_UP_MESSAGE_ENABLE`
+
+This is a boolean macro that will test the OLED and BMP280 i2c communication by collecting information from the sensor and printing it to the display on start up. This feature is promarially for debugging, so once set up has comcluded it can be disabled. The default falue is ***false***.
+
 ### `FONT_SIZE`
 
 Font size will change the size of the letters printed on the OLED display. The default value is ***0***.
@@ -48,17 +56,21 @@ This will set the maximum size of buffers that contain strings. The maximum size
 
 This will set the maximum size of buffers that contain integers. The integers must be converted to strings prior to printing on the OLED display. Since the the maximum integer value is unknown, the maximum string length is hard to determine. Feel free to play around and find smaller values that work. The default value is ***20***.
 
+### `MORSE_RATIO_THRESHOLD`
+
+This will set the threshold for detecting if the received string is a graphic. Since letters translate into multiple symbols in morse code, the ratio between the output morse message and the input english message will be greater than 1. Graphics, contrastly, contain primarially spaces, which translate to only one morse symbol. This means that graphics output/input ratio will almost always be close to 1. Applying this knowledge, the morse code blink script will only run if the enable is on, and if the calculated ratio is greater than this variable. The default value is ***2***.
+
 ### `MAX_MORSE_BUF_SIZE`
 
 This will set the maximum size of buffers that contain translated morse code messages. Since the maximum morse representation of a single character is 5 morse characters, the default value is ***5 times MAX_STRING_MSG_BUF_SIZE***.
 
-### `MORSE_ENABLE`
+### `GROUP_TOPIC`
 
-This will enable the function that blinks the on-board led on the MilkV Duo. Since the fastest the LED can blink is a 2 second period, so long messages can take a while to blink. You have the option to diable the blinking to save time. Regardless of the state of `MORSE_ENABLE` the translated morse messages will be printed to the terminal.
+This is the string that was provided by the professor to verify the functionality of the project. Using this variable we were able to connect to the class server and receive messages for processing.
 
-### `START_UP_MESSAGE_ENABLE`
+### `GROUP_IP`
 
-This is a boolean macro that will test the OLED and BMP280 i2c communication by collecting information from the sensor and printing it to the display on start up. This feature is promarially for debugging, so once set up has comcluded it can be disabled. The default falue is ***false***.
+This is the IP address that was provided by the professor to verify the functionality of the project. Using this variable we were able to connect to the class server and receive messages for processing.
 
 ## Challenges
 
